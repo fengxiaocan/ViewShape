@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="shapeType" format="enum">
+        <enum name="rectangle" value="0" />
+        <enum name="oval" value="1" />
+        <enum name="line" value="2" />
+        <enum name="ring" value="3" />
+    </attr>
+
+    <attr name="shapeSolidSize" format="dimension" />
+    <attr name="shapeSolidWidth" format="dimension" />
+    <attr name="shapeSolidHeight" format="dimension" />
+    <attr name="shapeSolidColor" format="color" />
+
+    <attr name="shapeStrokeWidth" format="dimension" />
+    <attr name="shapeStrokeColor" format="color" />
+    <attr name="shapeStokeDashWidth" format="dimension" />
+    <attr name="shapeStokeDashGap" format="dimension" />
+
+    <attr name="shapeCornerRadius" format="dimension" />
+    <attr name="shapeCornerRadiusTopLeft" format="dimension" />
+    <attr name="shapeCornerRadiusTopRight" format="dimension" />
+    <attr name="shapeCornerRadiusBottomLeft" format="dimension" />
+    <attr name="shapeCornerRadiusBottomRight" format="dimension" />
+
+    <attr name="shapeGradientType" format="enum">
+        <enum name="linear" value="0" />
+        <enum name="radial" value="1" />
+        <enum name="sweep" value="2" />
+    </attr>
+
+    <attr name="shapeGradientAngle" format="enum">
+        <enum name="top_bottom" value="0" />
+        <enum name="tr_bl" value="1" />
+        <enum name="right_left" value="2" />
+        <enum name="br_tl" value="3" />
+        <enum name="bottom_top" value="4" />
+        <enum name="bl_tr" value="5" />
+        <enum name="left_right" value="6" />
+        <enum name="tl_br" value="7" />
+
+    </attr>
+    <attr name="shapeGradientStartColor" format="color" />
+    <attr name="shapeGradientCenterColor" format="color" />
+    <attr name="shapeGradientEndColor" format="color" />
+    <attr name="shapeGradientRadius" format="dimension" />
+    <attr name="shapeGradientCenterX" format="float" />
+    <attr name="shapeGradientCenterY" format="float" />
+
+
+
+
+    <declare-styleable name="ViewShape">
+        <attr name="shapeType" />
+
+        <attr name="shapeSolidSize"  />
+        <attr name="shapeSolidWidth"  />
+        <attr name="shapeSolidHeight"  />
+        <attr name="shapeSolidColor" />
+
+        <attr name="shapeStrokeWidth"  />
+        <attr name="shapeStrokeColor"  />
+        <attr name="shapeStokeDashWidth"  />
+        <attr name="shapeStokeDashGap"  />
+
+        <attr name="shapeCornerRadius" />
+        <attr name="shapeCornerRadiusTopLeft" />
+        <attr name="shapeCornerRadiusTopRight" />
+        <attr name="shapeCornerRadiusBottomLeft" />
+        <attr name="shapeCornerRadiusBottomRight" />
+
+        <attr name="shapeGradientType" />
+
+        <attr name="shapeGradientAngle" />
+        <attr name="shapeGradientStartColor"  />
+        <attr name="shapeGradientCenterColor"  />
+        <attr name="shapeGradientEndColor"  />
+        <attr name="shapeGradientRadius"  />
+        <attr name="shapeGradientCenterX" />
+        <attr name="shapeGradientCenterY"  />
+    </declare-styleable>
+</resources>

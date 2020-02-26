@@ -1,0 +1,2 @@
+include ':app', ':vshape', ':lint'
+rootProject.name='ViewShape'
