@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
-def ideInstallationDir = new File('/Applications/Android Studio.app/Contents/')
-def androidPluginLibPath = 'plugins/android/lib'
+//def ideInstallationDir = new File('/Applications/Android Studio.app/Contents/')
+//def androidPluginLibPath = 'plugins/android/lib'
 def lintVersion = '27.0.0-alpha09'
 
 configurations {
@@ -20,20 +20,25 @@ dependencies {
     compileOnly "com.android.tools.external.com-intellij:intellij-core:$lintVersion"
     compileOnly 'com.android.tools:common:26.5.3'
     compileOnly 'com.android.tools.layoutlib:layoutlib-api:26.5.3'
-    if (ideInstallationDir.exists() && ideInstallationDir.isDirectory()) {
-        ["${androidPluginLibPath}/layoutlib.jar",
-         "${androidPluginLibPath}/android.jar",
-         'lib/openapi.jar',
-         'lib/platform-api.jar',
-         'lib/idea.jar'
-        ].each { lib ->
-            def file = new File(ideInstallationDir, lib)
-            if(!file.exists()) throw new Exception("file $file does not exist")
-            compileOnly files(file)
-        }
-    } else {
-        throw new GradleException('Invalid ide installation dir')
-    }
+    implementation files('libs/android.jar')
+    implementation files('libs/idea.jar')
+    implementation files('libs/layoutlib.jar')
+    implementation files('libs/openapi.jar')
+    implementation files('libs/platform-api.jar')
+    //    if (ideInstallationDir.exists() && ideInstallationDir.isDirectory()) {
+    //        ["${androidPluginLibPath}/layoutlib.jar",
+    //         "${androidPluginLibPath}/android.jar",
+    //         'lib/openapi.jar',
+    //         'lib/platform-api.jar',
+    //         'lib/idea.jar'
+    //        ].each { lib ->
+    //            def file = new File(ideInstallationDir, lib)
+    //            if(!file.exists()) throw new Exception("file $file does not exist")
+    //            compileOnly files(file)
+    //        }
+    //    } else {
+    //        throw new GradleException('Invalid ide installation dir')
+    //    }
     lintChecks files(jar)
 }
 

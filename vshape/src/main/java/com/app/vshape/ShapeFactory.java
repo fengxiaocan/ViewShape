@@ -31,9 +31,12 @@ public class ShapeFactory implements LayoutInflater.Factory2{
 
     public ShapeFactory(AppCompatActivity activity){
         appCompatDelegate = activity.getDelegate();
-        setFactory(activity.getLayoutInflater().getFactory());
-        setFactory2(activity.getLayoutInflater().getFactory2());
-        activity.getLayoutInflater().setFactory2(this);
+        setFactory(activity.getLayoutInflater()
+                           .getFactory());
+        setFactory2(activity.getLayoutInflater()
+                            .getFactory2());
+        activity.getLayoutInflater()
+                .setFactory2(this);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class ShapeFactory implements LayoutInflater.Factory2{
     public View onCreateView(@Nullable View parent,@NonNull String name,@NonNull Context context,
             @NonNull AttributeSet attrs)
     {
-        View view;
+        View view = null;
         if(factory2 != null){
             view = factory2.onCreateView(parent,name,context,attrs);
         } else if(factory != null){
@@ -55,6 +58,10 @@ public class ShapeFactory implements LayoutInflater.Factory2{
             view = appCompatDelegate.createView(parent,name,context,attrs);
         } else{
             view = createView(name,context,attrs);
+        }
+        //防止出现为null的情况,即是LinearLayout等根节点
+        if(view == null){
+            view = onCreateOtherView(name,context,attrs);
         }
         ShapeHelper.onCreateShape(view,context,attrs);
         return view;
@@ -76,14 +83,23 @@ public class ShapeFactory implements LayoutInflater.Factory2{
                     view = LayoutInflater.from(context)
                                          .createView(name,"android.webkit.",attrs);
                 }
-            } else{    //带".",说明是自定义的View
+            }/* else{    //带".",说明是自定义的View
                 view = LayoutInflater.from(context)
                                      .createView(name,null,attrs);
-            }
+            }*/
         } catch(Exception e){
             view = null;
         }
         return view;
+    }
+
+    private View onCreateOtherView(String name,Context context,AttributeSet attrs){
+        try{
+            return LayoutInflater.from(context)
+                                 .createView(name,null,attrs);
+        } catch(ClassNotFoundException e){
+            return null;
+        }
     }
 
 }

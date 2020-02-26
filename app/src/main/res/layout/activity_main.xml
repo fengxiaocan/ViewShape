@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:padding="20dp"
+    android:layout_margin="20dp"
+    android:background="@color/colorAccent">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +15,7 @@
         android:padding="20dp"
         android:text="Hello World!"
         app:shapeCornerRadius="50dp"
-        app:shapeSolidColor="@color/colorAccent"
+        app:shapeSolidColor="#082183"
         app:shapeStrokeColor="@color/colorPrimary"
         app:shapeStrokeWidth="1dp"
         app:shapeType="rectangle"
