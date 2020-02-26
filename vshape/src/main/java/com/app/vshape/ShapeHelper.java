@@ -1,5 +1,6 @@
 package com.app.vshape;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -20,12 +21,21 @@ public final class ShapeHelper{
     }
 
     /**
-     * 重写{@link AppCompatActivity#onCreate(Bundle)}方法,写在super.onCreate之前
+     * 注册{@link AppCompatActivity#onCreate(Bundle)}方法,写在super.onCreate之前
      *
      * @param activity
      * @return
      */
-    public static ShapeFactory installShape(AppCompatActivity activity){
+    public static ShapeFactory registerActivity(AppCompatActivity activity){
+        return new ShapeFactory(activity);
+    }
+
+    /**
+     * 注册{@link Activity#onCreate(Bundle)}方法,写在super.onCreate之前
+     * @param activity
+     * @return
+     */
+    public static ShapeFactory registerActivity(Activity activity){
         return new ShapeFactory(activity);
     }
 
@@ -178,14 +188,4 @@ public final class ShapeHelper{
         a.recycle();
         return drawable;
     }
-
-    //    public static void installViewFactory(Context ctx){
-    //        LayoutInflater inflater = LayoutInflater.from(ctx);
-    //        LayoutInflater.Factory2 factory2 = inflater.getFactory2();
-    //        if(factory2 instanceof ShapeFactory)
-    //            return;
-    //        ShapeFactory shapeFactory = new ShapeFactory();
-    //        shapeFactory.setFactory2(factory2);
-    //        inflater.setFactory2(shapeFactory);
-    //    }
 }
