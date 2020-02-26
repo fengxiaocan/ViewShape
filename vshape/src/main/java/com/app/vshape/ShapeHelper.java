@@ -100,8 +100,7 @@ public final class ShapeHelper{
     }
 
     static void applyDrawableToView(View view,AttributeSet attrs){
-        view.setBackground(newshape(view.getContext()
-                                        .getResources(),attrs));
+        view.setBackground(newshape(view.getContext().getResources(),attrs));
     }
 
     public static GradientDrawable newshape(Context context,AttributeSet attrs){

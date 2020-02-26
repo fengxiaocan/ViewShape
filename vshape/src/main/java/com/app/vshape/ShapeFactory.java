@@ -1,5 +1,6 @@
 package com.app.vshape;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -29,14 +30,18 @@ public class ShapeFactory implements LayoutInflater.Factory2{
         appCompatDelegate = null;
     }
 
+    public ShapeFactory(Activity activity){
+        appCompatDelegate = null;
+        setFactory(activity.getLayoutInflater().getFactory());
+        setFactory2(activity.getLayoutInflater().getFactory2());
+        activity.getLayoutInflater().setFactory2(this);
+    }
+
     public ShapeFactory(AppCompatActivity activity){
         appCompatDelegate = activity.getDelegate();
-        setFactory(activity.getLayoutInflater()
-                           .getFactory());
-        setFactory2(activity.getLayoutInflater()
-                            .getFactory2());
-        activity.getLayoutInflater()
-                .setFactory2(this);
+        setFactory(activity.getLayoutInflater().getFactory());
+        setFactory2(activity.getLayoutInflater().getFactory2());
+        activity.getLayoutInflater().setFactory2(this);
     }
 
     @Override
@@ -56,13 +61,11 @@ public class ShapeFactory implements LayoutInflater.Factory2{
             view = factory.onCreateView(name,context,attrs);
         } else if(appCompatDelegate != null){
             view = appCompatDelegate.createView(parent,name,context,attrs);
-        } else{
+        }
+        if(view == null){
             view = createView(name,context,attrs);
         }
         //防止出现为null的情况,即是LinearLayout等根节点
-        if(view == null){
-            view = onCreateOtherView(name,context,attrs);
-        }
         ShapeHelper.onCreateShape(view,context,attrs);
         return view;
     }
@@ -72,34 +75,21 @@ public class ShapeFactory implements LayoutInflater.Factory2{
         try{
             if(- 1 == name.indexOf('.')){    //不带".",说明是系统的View
                 if("View".equals(name)){
-                    view = LayoutInflater.from(context)
-                                         .createView(name,"android.view.",attrs);
+                    view = LayoutInflater.from(context).createView(name,"android.view.",attrs);
                 }
                 if(view == null){
-                    view = LayoutInflater.from(context)
-                                         .createView(name,"android.widget.",attrs);
+                    view = LayoutInflater.from(context).createView(name,"android.widget.",attrs);
                 }
                 if(view == null){
-                    view = LayoutInflater.from(context)
-                                         .createView(name,"android.webkit.",attrs);
+                    view = LayoutInflater.from(context).createView(name,"android.webkit.",attrs);
                 }
-            }/* else{    //带".",说明是自定义的View
-                view = LayoutInflater.from(context)
-                                     .createView(name,null,attrs);
-            }*/
+            } else{    //带".",说明是自定义的View
+                view = LayoutInflater.from(context).createView(name,null,attrs);
+            }
         } catch(Exception e){
             view = null;
         }
         return view;
-    }
-
-    private View onCreateOtherView(String name,Context context,AttributeSet attrs){
-        try{
-            return LayoutInflater.from(context)
-                                 .createView(name,null,attrs);
-        } catch(ClassNotFoundException e){
-            return null;
-        }
     }
 
 }
