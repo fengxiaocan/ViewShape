@@ -16,22 +16,4 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
     }
 
-    //
-    //    @Nullable
-    //    @Override
-    //    public View onCreateView(@Nullable View parent,@NonNull String name,@NonNull Context context,
-    //            @NonNull AttributeSet attrs)
-    //    {
-    //        View view = super.onCreateView(parent,name,context,attrs);
-    //        ShapeHelper.onCreateShape(view,context,attrs);
-    //        return view;
-    //    }
-    //
-    //    @Nullable
-    //    @Override
-    //    public View onCreateView(@NonNull String name,@NonNull Context context,@NonNull AttributeSet attrs){
-    //        View view = super.onCreateView(name,context,attrs);
-    //        ShapeHelper.onCreateShape(view,context,attrs);
-    //        return view;
-    //    }
 }

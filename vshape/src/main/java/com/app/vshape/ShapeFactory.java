@@ -66,7 +66,9 @@ public class ShapeFactory implements LayoutInflater.Factory2{
             view = createView(name,context,attrs);
         }
         //防止出现为null的情况,即是LinearLayout等根节点
-        ShapeHelper.onCreateShape(view,context,attrs);
+        if(ShapeHelper.onCreateShape(view,attrs)){
+            ShapeHelper.applyDrawableToView(view,attrs);
+        }
         return view;
     }
 

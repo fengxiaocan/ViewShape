@@ -25,7 +25,9 @@ import com.app.vshape.preview.ShapePreview;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * 安装当前插件
+ */
 @SuppressWarnings("unused")
 public final class ShapeIssueRegistry extends IssueRegistry{
 

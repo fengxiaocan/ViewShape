@@ -41,6 +41,7 @@ final class ViewFactory implements LayoutInflater.Factory2{
     private static final Set<String> APPCOMPAT_VIEWS = new HashSet<>(
             Arrays.asList("TextView","ImageView","Button","EditText","Spinner","ImageButton","CheckBox","RadioButton",
                     "CheckedTextView","AutoCompleteTextView","MultiAutoCompleteTextView","RatingBar","SeekBar"));
+
     private static final String sAutoNs = "http://schemas.android.com/apk/res-auto";
     private static boolean sExceptionCaught = false; //only log exception once, don't mess up log file
     private Set<String> mFailedAppCompatViews = new HashSet<>();
@@ -71,7 +72,7 @@ final class ViewFactory implements LayoutInflater.Factory2{
     @Override
     public View onCreateView(View parent,String name,Context context,AttributeSet attrs){
         View result = null;
-        if(this.mLoadAppCompatViews && APPCOMPAT_VIEWS.contains(name) && ! this.mFailedAppCompatViews.contains(name)){
+        if(this.mLoadAppCompatViews && APPCOMPAT_VIEWS.contains(name) && !this.mFailedAppCompatViews.contains(name)){
             result = this.loadCustomView((mUseAndroidx ? sAndroidxViewPrefix : sLegacyAppCompatViewPrefix) + name,
                     attrs);
             if(result == null){
@@ -99,35 +100,37 @@ final class ViewFactory implements LayoutInflater.Factory2{
         }
 
         if(result != null){
-            if(attrs.getAttributeValue(sAutoNs,"shapeType") != null
-            ||attrs.getAttributeValue(sAutoNs,"shapeSolidSize" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeSolidWidth" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeSolidHeight" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeSolidColor")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeStrokeWidth" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeStrokeColor" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeStokeDashWidth" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeStokeDashGap" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerTopLeftRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerTopRightRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerBottomLeftRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerBottomRightRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientType")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientAngle")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientStartColor" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientCenterColor" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientEndColor" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientRadius" )!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientCenterX")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeGradientCenterY" )!=null
-            ){
+            //判断View是否有shape设定的属性
+            if(attrs.getAttributeValue(sAutoNs,"shapeType") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeSolidSize") != null || attrs.getAttributeValue(sAutoNs,"shapeSolidWidth") != null ||
+               attrs.getAttributeValue(sAutoNs,"shapeSolidHeight") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeSolidColor") != null || attrs.getAttributeValue(sAutoNs,"shapeStrokeWidth") != null ||
+               attrs.getAttributeValue(sAutoNs,"shapeStrokeColor") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeStokeDashWidth") != null || attrs.getAttributeValue(sAutoNs,"shapeStokeDashGap") != null ||
+               attrs.getAttributeValue(sAutoNs,"shapeCornerRadius") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeCornerTopLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeCornerTopRightRadius") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeCornerBottomLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
+                    "shapeCornerBottomRightRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientType") !=
+                                                               null || attrs.getAttributeValue(sAutoNs,
+                    "shapeGradientAngle") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientStartColor") !=
+                                                     null || attrs.getAttributeValue(sAutoNs,
+                    "shapeGradientCenterColor") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientEndColor") !=
+                                                           null || attrs.getAttributeValue(sAutoNs,
+                    "shapeGradientRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientCenterX") != null ||
+               attrs.getAttributeValue(sAutoNs,"shapeGradientCenterY") != null)
+            {
                 applyDrawableToView(result,attrs);
             }
         }
         return result;
     }
 
+    /**
+     * 调用预览方法
+     * @param view
+     * @param attrs
+     */
     private void applyDrawableToView(View view,AttributeSet attrs){
         try{
             Class<?> c = mLayoutLibCallback.findClass("com.app.vshape.ShapeHelper");
@@ -137,13 +140,9 @@ final class ViewFactory implements LayoutInflater.Factory2{
         } catch(Throwable e){
             if(e instanceof InvocationTargetException){
                 Throwable ex = ((InvocationTargetException)e).getTargetException();
-                if(ex instanceof NoClassDefFoundError && ex.getMessage()
-                                                           .contains("vshape/R$styleable"))
-                {
-                    Bridge.getLog()
-                          .warning("build-needed",
-                                  "ViewShape not worked due to missing R.class, try assemble project to refresh",null,
-                                  null);
+                if(ex instanceof NoClassDefFoundError && ex.getMessage().contains("vshape/R$styleable")){
+                    Bridge.getLog().warning("build-needed",
+                            "ViewShape not worked due to missing R.class, try assemble project to refresh",null,null);
                 }
             } else{
                 if(! sExceptionCaught){
@@ -154,6 +153,12 @@ final class ViewFactory implements LayoutInflater.Factory2{
         }
     }
 
+    /**
+     * 加载View的一些信息
+     * @param name
+     * @param attrs
+     * @return
+     */
     private View loadCustomView(String name,AttributeSet attrs){
         if(mLayoutLibCallback == null)
             return null;

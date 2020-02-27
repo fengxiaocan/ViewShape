@@ -32,7 +32,6 @@ import org.jetbrains.android.dom.attrs.AttributeDefinitions;
 import org.jetbrains.android.dom.attrs.StyleableDefinition;
 import org.jetbrains.android.dom.attrs.ToolsAttributeUtil;
 import org.jetbrains.android.dom.converters.CompositeConverter;
-import org.jetbrains.android.dom.converters.PackageClassConverter;
 import org.jetbrains.android.dom.converters.ResourceReferenceConverter;
 import org.jetbrains.android.dom.layout.DataBindingElement;
 import org.jetbrains.android.dom.layout.LayoutElement;
@@ -58,13 +57,13 @@ final class ShapeAttrProcessing{
      * to current xml tag.
      */
     private static final String EXTRA_STYLEABLE_ATTR_NAME = "extraStyleables";
+
     /**
      * This converter is used to find custom drawable classes in current project
      */
-    private static final PackageClassConverter DRAWABLE_CLASS_CONVERTER = new PackageClassConverter(
-            "android.graphics.drawable.Drawable");
-    private static final DrawableIdConverter DRAWABLE_ID_CONVERTER = new DrawableIdConverter();
-
+    //    private static final PackageClassConverter DRAWABLE_CLASS_CONVERTER = new PackageClassConverter(
+    //            "android.graphics.drawable.Drawable");
+    //    private static final DrawableIdConverter DRAWABLE_ID_CONVERTER = new DrawableIdConverter();
     static void registerShapeAttributes(AndroidFacet facet,AndroidDomElement element,
             AttributeProcessingUtil.AttributeProcessor callback)
     {
@@ -76,6 +75,7 @@ final class ShapeAttrProcessing{
         if(isInvalidTagName(tag.getName()))
             return;
         List<String> styleableNames = getStyleablesToRegister(tag.getAttributes());
+
         for(String styleableName: styleableNames){
             if(styleableName != null && styleableName.length() > 0){
                 registerAttributes(facet,element,styleableName,callback);
@@ -134,8 +134,7 @@ final class ShapeAttrProcessing{
         ResourceManager manager = null;
         if(sModuleResourceManagerExists){
             try{
-                manager = ModuleResourceManagers.getInstance(facet)
-                                                .getResourceManager(null);
+                manager = ModuleResourceManagers.getInstance(facet).getResourceManager(null);
             } catch(NoClassDefFoundError ignore){
                 sModuleResourceManagerExists = false;
             }
@@ -157,8 +156,7 @@ final class ShapeAttrProcessing{
             }
             Manifest manifest = facet.getManifest();
             if(manifest != null){
-                String aPackage = manifest.getPackage()
-                                          .getValue();
+                String aPackage = manifest.getPackage().getValue();
                 if(aPackage != null && ! aPackage.isEmpty()){
                     return SdkConstants.URI_PREFIX + aPackage;
                 }
@@ -179,12 +177,10 @@ final class ShapeAttrProcessing{
             }
         }
         try{
-            return facet.getConfiguration()
-                        .isAppProject();
+            return facet.getConfiguration().isAppProject();
         } catch(NoSuchMethodError nsme){
             try{
-                sIsAppProjectMethod = facet.getClass()
-                                           .getDeclaredMethod("isAppProject",(Class<?>[])null);
+                sIsAppProjectMethod = facet.getClass().getDeclaredMethod("isAppProject",(Class<?>[])null);
                 return (boolean)sIsAppProjectMethod.invoke(facet,(Object[])null);
             } catch(Exception ignore){
             }
@@ -216,12 +212,12 @@ final class ShapeAttrProcessing{
         DomExtension extension = callback.processAttribute(xmlName,attrDef,parentStyleableName);
         if(extension != null){
             Converter converter = AndroidDomUtil.getSpecificConverter(xmlName,element);
-//            if("drawableName".equals(name)){
-//                converter = DRAWABLE_CLASS_CONVERTER;
-//            }
-//            if("drawableId".equals(name)){
-//                converter = DRAWABLE_ID_CONVERTER;
-//            }
+            //            if("drawableName".equals(name)){
+            //                converter = DRAWABLE_CLASS_CONVERTER;
+            //            }
+            //            if("drawableId".equals(name)){
+            //                converter = DRAWABLE_ID_CONVERTER;
+            //            }
             if(converter == null){
                 if(SdkConstants.TOOLS_URI.equals(namespaceKey)){
                     converter = ToolsAttributeUtil.getConverter(attrDef);

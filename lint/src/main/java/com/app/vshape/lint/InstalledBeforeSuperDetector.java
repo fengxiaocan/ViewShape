@@ -35,17 +35,21 @@ import org.jetbrains.uast.UMethod;
 import org.jetbrains.uast.UastUtils;
 import org.jetbrains.uast.visitor.AbstractUastVisitor;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 在activity中检测是否有调用 registerShapeFactory 或者registerActivity
+ */
 public final class InstalledBeforeSuperDetector extends Detector implements SourceCodeScanner, Detector.UastScanner{
     static final Issue ISSUE = Issue.create("ViewShapeInstalledBeforeSuper",
-            "ViewShape installed before super.onCreate" + "()","You have installed ShapeHelper before super.onCreate()," +
-                                                               " this will cause AppCompatViews unavailable if you are using AppCompatActivity",
-            Category.CORRECTNESS,7,Severity.WARNING,
-            new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
+            "ViewShape registerActivity before super.onCreate" + "()",
+            "You have installed ShapeHelper before super.onCreate()," +
+            " this will cause AppCompatViews unavailable if you are using AppCompatActivity",Category.CORRECTNESS,7,
+            Severity.WARNING,new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
 
-    private static final String INSTALL_METHOD = "installShape";
+    private static final String INSTALL_METHOD = "registerActivity";
+    private static final String NEW_METHOD = "registerShapeFactory";
     private static final String TYPE_SHAPE = "com.app.vshape.ShapeHelper";
     private static final String LEGACY_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
     private static final String COMPAT_ACTIVITY = "androidx.appcompat.app.AppCompatActivity";
@@ -53,16 +57,22 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
     @Nullable
     @Override
     public List<String> getApplicableMethodNames(){
-        return Collections.singletonList(INSTALL_METHOD);
+        //获取支持的方法集合
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add(NEW_METHOD);
+        strings.add(INSTALL_METHOD);
+        return strings;
     }
 
     @Override
     public void visitMethod(JavaContext context,UCallExpression call,PsiMethod method){
         JavaEvaluator evaluator = context.getEvaluator();
 
-        //check ShapeHelper.installShape() call
+        //check ShapeHelper.registerActivity() call
+        //下面的方法都是检测是否在AppCompatActivity onCreate中注册过registerActivity
         String methodName = method.getName();
-        if(! methodName.equals(INSTALL_METHOD) || ! evaluator.isMemberInClass(method,TYPE_SHAPE))
+        if(! methodName.equals(INSTALL_METHOD) || ! methodName.equals(NEW_METHOD) || ! evaluator.isMemberInClass(method,
+                TYPE_SHAPE))
             return;
 
         //check current class is decent of AppCompatActivity
@@ -86,13 +96,13 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
         uMethod.accept(finder);
         if(! finder.isSuperOnCreateCalled()){
             context.report(ISSUE,call,context.getLocation(call),
-                    "calling `ShapeHelper.installViewFactory()` before super.onCreate can cause AppCompatViews unavailable");
+                    "calling `ShapeHelper.registerActivity()` before super.onCreate can cause AppCompatViews unavailable");
         }
     }
 
     private static class SuperOnCreateFinder extends AbstractUastVisitor{
         /**
-         * The target installViewFactory call
+         * The target registerShapeFactory call
          */
         private final UCallExpression target;
         /**
@@ -117,8 +127,7 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
                 }
             } else{
                 if("onCreate".equals(LintUtils.getMethodName(node)) && node.getReceiver() != null && "super".equals(
-                        node.getReceiver()
-                            .toString()))
+                        node.getReceiver().toString()))
                 {
                     onCreateFound = true;
                 }

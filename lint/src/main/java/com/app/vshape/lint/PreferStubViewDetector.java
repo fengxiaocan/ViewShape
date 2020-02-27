@@ -36,42 +36,38 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Deprecated
-public final class PreferStubViewDetector extends Detector implements Detector.XmlScanner, XmlScanner{
-    static final Issue ISSUE = Issue.create("PreferUseStubView","Using stub view ShapeHelper provided instead",
-            "To work with design time preview, use stub view provided by ShapeHelper instead of system views",
-            Category.CORRECTNESS,7,Severity.ERROR,
-            new Implementation(PreferStubViewDetector.class,Scope.RESOURCE_FILE_SCOPE));
-
-
-    private static Set<String> sSystemViewNames = new HashSet<>(
-            Arrays.asList("Button","CheckBox","EditText","FrameLayout","GridView","HorizontalScrollView","ImageView",
-                    "LinearLayout","ListView","ProgressBar","RelativeLayout","ScrollView","SeekBar","Spinner",
-                    "TextView","View"));
-
-
+public final class PreferStubViewDetector /*extends Detector implements Detector.XmlScanner, XmlScanner*/{
+//    static final Issue ISSUE = Issue.create("PreferUseStubView","Using stub view ShapeHelper provided instead",
+//            "To work with design time preview, use stub view provided by ShapeHelper instead of system views",
+//            Category.CORRECTNESS,7,Severity.ERROR,
+//            new Implementation(PreferStubViewDetector.class,Scope.RESOURCE_FILE_SCOPE));
+//
+//
+//    private static Set<String> sSystemViewNames = new HashSet<>(
+//            Arrays.asList("Button","CheckBox","EditText","FrameLayout","GridView","HorizontalScrollView","ImageView",
+//                    "LinearLayout","ListView","ProgressBar","RelativeLayout","ScrollView","SeekBar","Spinner",
+//                    "TextView","View"));
+//
+//
+//    //    @Override
+//    //    public Collection<String> getApplicableAttributes(){
+//    //        return Arrays.asList("drawableType","drawableName");
+//    //    }
+//
 //    @Override
-//    public Collection<String> getApplicableAttributes(){
-//        return Arrays.asList("drawableType","drawableName");
+//    public boolean appliesTo(@NotNull ResourceFolderType folderType){
+//        return folderType == ResourceFolderType.LAYOUT;
 //    }
-
-    @Override
-    public boolean appliesTo(@NotNull ResourceFolderType folderType){
-        return folderType == ResourceFolderType.LAYOUT;
-    }
-
-    @Override
-    public void visitAttribute(@NotNull XmlContext context,@NotNull Attr attribute){
-        Element tag = attribute.getOwnerElement();
-        String tagName = tag.getTagName();
-        if(sSystemViewNames.contains(tagName)){
-            LintFix fix = LintFix.create()
-                                 .replace()
-                                 .range(context.getLocation(tag))
-                                 .text(tagName)
-                                 .with("com.app.vshape.view." + tagName)
-                                 .build();
-            context.report(ISSUE,context.getLocation(tag),
-                    "Using com.app.vshape.view." + tagName + " instead to support design time preview",fix);
-        }
-    }
+//
+//    @Override
+//    public void visitAttribute(@NotNull XmlContext context,@NotNull Attr attribute){
+//        Element tag = attribute.getOwnerElement();
+//        String tagName = tag.getTagName();
+//        if(sSystemViewNames.contains(tagName)){
+//            LintFix fix = LintFix.create().replace().range(context.getLocation(tag)).text(tagName).with(
+//                    "com.app.vshape.view." + tagName).build();
+//            context.report(ISSUE,context.getLocation(tag),
+//                    "Using com.app.vshape.view." + tagName + " instead to support design time preview",fix);
+//        }
+//    }
 }

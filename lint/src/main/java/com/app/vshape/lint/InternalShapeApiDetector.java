@@ -40,6 +40,9 @@ import org.jetbrains.uast.UastUtils;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 扫描能够预览的api,能够在开发中预览
+ */
 @Deprecated
 public final class InternalShapeApiDetector extends Detector implements SourceCodeScanner, Detector.UastScanner{
 
@@ -57,6 +60,7 @@ public final class InternalShapeApiDetector extends Detector implements SourceCo
     @Nullable
     @Override
     public List<String> getApplicableMethodNames(){
+        //添加支持预览的方法
         return Collections.singletonList(APPLY_METHOD);
     }
 
@@ -65,6 +69,7 @@ public final class InternalShapeApiDetector extends Detector implements SourceCo
         JavaEvaluator evaluator = context.getEvaluator();
 
         //check ViewShape.applyDrawableToView() call
+        //检测是否有调用预览的方法?
         String methodName = method.getName();
         if(! methodName.equals(APPLY_METHOD) || ! evaluator.isMemberInClass(method,VIEWSHAPE_CLASS))
             return;

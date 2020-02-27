@@ -34,9 +34,7 @@ import java.util.WeakHashMap;
 
 import sun.misc.Unsafe;
 
-/**
- * Preview support entry point for ShapeHelper.
- */
+
 @SuppressWarnings("unchecked")
 public final class ShapePreview{
     static final Logger sLogger = Logger.getInstance(ShapePreview.class);

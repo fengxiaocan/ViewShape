@@ -32,6 +32,10 @@ public final class ShapeHelper{
         return new ShapeFactory(activity);
     }
 
+    public static ShapeFactory registerShapeFactory(){
+        return new ShapeFactory();
+    }
+
     /**
      * 注册{@link Activity#onCreate(Bundle)}方法,写在super.onCreate之前
      *
@@ -44,6 +48,7 @@ public final class ShapeHelper{
 
     /**
      * 注册在{@link Activity#attachBaseContext(Context)}方法
+     *
      * @param newBase
      * @return
      */
@@ -104,27 +109,22 @@ public final class ShapeHelper{
      * .onCreateView后再调用该方法
      *
      * @param view
-     * @param context
      * @param attrs
      */
-    public static void onCreateShape(View view,Context context,AttributeSet attrs)
+    public static boolean onCreateShape(View view,AttributeSet attrs)
     {
         if(view == null){
-            return;
+            return false;
         }
         int attCount = attrs.getAttributeCount();
-        boolean isHasShape = false;
         for(int i = 0;i < attCount;++ i){
             String attributeName = attrs.getAttributeName(i);
             //是否支持该类型attribute
             if(ShapeHelper.isSupportedAttr(attributeName)){
-                isHasShape = true;
-                break;
+                return true;
             }
         }
-        if(isHasShape){
-            ShapeHelper.setShape(view,context,attrs);
-        }
+        return false;
     }
 
     /**
@@ -138,6 +138,11 @@ public final class ShapeHelper{
         view.setBackground(newshape(context.getResources(),attrs));
     }
 
+    /**
+     * 起到预览作用
+     * @param view
+     * @param attrs
+     */
     static void applyDrawableToView(View view,AttributeSet attrs){
         view.setBackground(newshape(view.getContext().getResources(),attrs));
     }
