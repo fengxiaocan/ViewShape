@@ -17,12 +17,16 @@ public class ShapeFactory implements LayoutInflater.Factory2{
     private LayoutInflater.Factory2 factory2;
 
     public ShapeFactory setFactory2(LayoutInflater.Factory2 factory2){
-        this.factory2 = factory2;
+        if(factory2 != null){
+            this.factory2 = factory2;
+        }
         return this;
     }
 
     public ShapeFactory setFactory(LayoutInflater.Factory factory){
-        this.factory = factory;
+        if(factory != null){
+            this.factory = factory;
+        }
         return this;
     }
 
@@ -32,15 +36,11 @@ public class ShapeFactory implements LayoutInflater.Factory2{
 
     public ShapeFactory(Activity activity){
         appCompatDelegate = null;
-        setFactory(activity.getLayoutInflater().getFactory());
-        setFactory2(activity.getLayoutInflater().getFactory2());
         activity.getLayoutInflater().setFactory2(this);
     }
 
     public ShapeFactory(AppCompatActivity activity){
         appCompatDelegate = activity.getDelegate();
-        setFactory(activity.getLayoutInflater().getFactory());
-        setFactory2(activity.getLayoutInflater().getFactory2());
         activity.getLayoutInflater().setFactory2(this);
     }
 

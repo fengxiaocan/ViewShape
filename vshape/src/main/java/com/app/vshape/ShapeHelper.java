@@ -2,6 +2,7 @@ package com.app.vshape;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,12 +34,39 @@ public final class ShapeHelper{
 
     /**
      * 注册{@link Activity#onCreate(Bundle)}方法,写在super.onCreate之前
+     *
      * @param activity
      * @return
      */
     public static ShapeFactory registerActivity(Activity activity){
         return new ShapeFactory(activity);
     }
+
+    /**
+     * 注册在{@link Activity#attachBaseContext(Context)}方法
+     * @param newBase
+     * @return
+     */
+    public static Context attachBaseContext(final Context newBase){
+        final LayoutInflater inflater = LayoutInflater.from(newBase);
+        if(inflater instanceof ViewShapeInflater)
+            return newBase;
+        return new ContextWrapper(newBase){
+            private ViewShapeInflater mInflater;
+
+            @Override
+            public Object getSystemService(String name){
+                if(LAYOUT_INFLATER_SERVICE.equals(name)){
+                    if(mInflater == null){
+                        mInflater = new ViewShapeInflater(newBase,inflater);
+                    }
+                    return mInflater;
+                }
+                return super.getSystemService(name);
+            }
+        };
+    }
+
 
     public static boolean isSupportedAttr(String attributeName){
         switch(attributeName){

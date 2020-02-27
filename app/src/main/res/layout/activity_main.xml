@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:layout_margin="20dp"
+    app:shapeSolidColor="@color/colorAccent"
     android:background="@color/colorAccent">
 
     <TextView
