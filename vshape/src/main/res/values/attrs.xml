@@ -18,10 +18,10 @@
     <attr name="shapeStokeDashGap" format="dimension" />
 
     <attr name="shapeCornerRadius" format="dimension" />
-    <attr name="shapeCornerRadiusTopLeft" format="dimension" />
-    <attr name="shapeCornerRadiusTopRight" format="dimension" />
-    <attr name="shapeCornerRadiusBottomLeft" format="dimension" />
-    <attr name="shapeCornerRadiusBottomRight" format="dimension" />
+    <attr name="shapeCornerTopLeftRadius" format="dimension" />
+    <attr name="shapeCornerTopRightRadius" format="dimension" />
+    <attr name="shapeCornerBottomLeftRadius" format="dimension" />
+    <attr name="shapeCornerBottomRightRadius" format="dimension" />
 
     <attr name="shapeGradientType" format="enum">
         <enum name="linear" value="0" />
@@ -64,10 +64,10 @@
         <attr name="shapeStokeDashGap"  />
 
         <attr name="shapeCornerRadius" />
-        <attr name="shapeCornerRadiusTopLeft" />
-        <attr name="shapeCornerRadiusTopRight" />
-        <attr name="shapeCornerRadiusBottomLeft" />
-        <attr name="shapeCornerRadiusBottomRight" />
+        <attr name="shapeCornerTopLeftRadius" />
+        <attr name="shapeCornerTopRightRadius" />
+        <attr name="shapeCornerBottomLeftRadius" />
+        <attr name="shapeCornerBottomRightRadius" />
 
         <attr name="shapeGradientType" />
 

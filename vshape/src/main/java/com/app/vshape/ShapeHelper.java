@@ -82,10 +82,10 @@ public final class ShapeHelper{
             case "shapeStokeDashWidth":
             case "shapeStokeDashGap":
             case "shapeCornerRadius":
-            case "shapeCornerRadiusTopLeft":
-            case "shapeCornerRadiusTopRight":
-            case "shapeCornerRadiusBottomLeft":
-            case "shapeCornerRadiusBottomRight":
+            case "shapeCornerTopLeftRadius":
+            case "shapeCornerTopRightRadius":
+            case "shapeCornerBottomLeftRadius":
+            case "shapeCornerBottomRightRadius":
             case "shapeGradientStartColor":
             case "shapeGradientCenterColor":
             case "shapeGradientEndColor":
@@ -205,14 +205,14 @@ public final class ShapeHelper{
                 i.getDimensionPixelSize(a,R.styleable.ViewShape_shapeStokeDashWidth,0));
         //radius
         final float radius = i.getDimension(a,R.styleable.ViewShape_shapeCornerRadius,0);
-        drawable.setCornerRadii(new float[]{i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusTopLeft,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusTopLeft,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusTopRight,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusTopRight,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusBottomRight,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusBottomRight,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusBottomLeft,radius),
-                i.getDimension(a,R.styleable.ViewShape_shapeCornerRadiusBottomLeft,radius),});
+        drawable.setCornerRadii(new float[]{i.getDimension(a,R.styleable.ViewShape_shapeCornerTopLeftRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerTopLeftRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerTopRightRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerTopRightRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerBottomRightRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerBottomRightRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerBottomLeftRadius,radius),
+                i.getDimension(a,R.styleable.ViewShape_shapeCornerBottomLeftRadius,radius),});
 
         a.recycle();
         return drawable;

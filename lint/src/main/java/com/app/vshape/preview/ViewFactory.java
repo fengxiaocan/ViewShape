@@ -109,10 +109,10 @@ final class ViewFactory implements LayoutInflater.Factory2{
             ||attrs.getAttributeValue(sAutoNs,"shapeStokeDashWidth" )!=null
             ||attrs.getAttributeValue(sAutoNs,"shapeStokeDashGap" )!=null
             ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadius")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadiusTopLeft")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadiusTopRight")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadiusBottomLeft")!=null
-            ||attrs.getAttributeValue(sAutoNs,"shapeCornerRadiusBottomRight")!=null
+            ||attrs.getAttributeValue(sAutoNs,"shapeCornerTopLeftRadius")!=null
+            ||attrs.getAttributeValue(sAutoNs,"shapeCornerTopRightRadius")!=null
+            ||attrs.getAttributeValue(sAutoNs,"shapeCornerBottomLeftRadius")!=null
+            ||attrs.getAttributeValue(sAutoNs,"shapeCornerBottomRightRadius")!=null
             ||attrs.getAttributeValue(sAutoNs,"shapeGradientType")!=null
             ||attrs.getAttributeValue(sAutoNs,"shapeGradientAngle")!=null
             ||attrs.getAttributeValue(sAutoNs,"shapeGradientStartColor" )!=null
