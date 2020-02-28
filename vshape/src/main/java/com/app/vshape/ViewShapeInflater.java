@@ -4,18 +4,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import org.xmlpull.v1.XmlPullParser;
-
+@Deprecated
 final class ViewShapeInflater extends LayoutInflater{
     private static final String[] sClassPrefixList = {"android.widget.","android.webkit.","android.app."};
 
     ViewShapeInflater(Context newContext,LayoutInflater original){
         super(original,newContext);
-        ShapeFactory factory2 = new ShapeFactory();
-        factory2.setFactory2(getFactory2());
-        setFactory2(factory2);
+        Factory2 factory2 = original.getFactory2();
+        super.setFactory2(new ShapeFactory().setFactory2(factory2));
     }
 
     @Override
@@ -25,32 +22,14 @@ final class ViewShapeInflater extends LayoutInflater{
 
     @Override
     public void setFactory(Factory factory){
-        if(getFactory() != null){
-            ShapeFactory f = (ShapeFactory)getFactory2();
-            if(f == null){
-                super.setFactory2(f = new ShapeFactory());
-            }
-            f.setFactory(factory);
-        } else{
-            super.setFactory(factory);
-        }
+        ShapeFactory f = (ShapeFactory)getFactory2();
+        f.setFactory(factory);
     }
 
     @Override
     public void setFactory2(Factory2 factory2){
         ShapeFactory f = (ShapeFactory)getFactory2();
-        if(f == null){
-            super.setFactory2(f = new ShapeFactory());
-        }
         f.setFactory2(factory2);
-    }
-
-    @Override
-    public View inflate(XmlPullParser parser,ViewGroup root,boolean attachToRoot){
-        if(getFactory2() == null){
-            super.setFactory2(new ShapeFactory());
-        }
-        return super.inflate(parser,root,attachToRoot);
     }
 
     @Override

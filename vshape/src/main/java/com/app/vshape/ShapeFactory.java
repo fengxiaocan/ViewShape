@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public class ShapeFactory implements LayoutInflater.Factory2{
+    private static final String[] sClassPrefixList = {"android.widget.","android.webkit.","android.app."};
+
     private final AppCompatDelegate appCompatDelegate;
     private LayoutInflater.Factory factory;
     private LayoutInflater.Factory2 factory2;
@@ -65,7 +67,7 @@ public class ShapeFactory implements LayoutInflater.Factory2{
         if(view == null){
             view = createView(name,context,attrs);
         }
-        //防止出现为null的情况,即是LinearLayout等根节点
+
         if(ShapeHelper.onCreateShape(view,attrs)){
             ShapeHelper.applyDrawableToView(view,attrs);
         }
@@ -74,24 +76,32 @@ public class ShapeFactory implements LayoutInflater.Factory2{
 
     private View createView(String name,Context context,AttributeSet attrs){
         View view = null;
-        try{
-            if(- 1 == name.indexOf('.')){    //不带".",说明是系统的View
-                if("View".equals(name)){
-                    view = LayoutInflater.from(context).createView(name,"android.view.",attrs);
-                }
-                if(view == null){
-                    view = LayoutInflater.from(context).createView(name,"android.widget.",attrs);
-                }
-                if(view == null){
-                    view = LayoutInflater.from(context).createView(name,"android.webkit.",attrs);
-                }
-            } else{    //带".",说明是自定义的View
-                view = LayoutInflater.from(context).createView(name,null,attrs);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        if(- 1 == name.indexOf('.')){    //不带".",说明是系统的View
+            if("View".equals(name)){
+                view = createView(inflater,name,"android.view.",attrs);
             }
-        } catch(Exception e){
-            view = null;
+            if(view == null){
+                for(String prefix: sClassPrefixList){
+                    view = createView(inflater,name,prefix,attrs);
+                    if(view != null){
+                        return view;
+                    }
+                }
+            }
+        } else{    //带".",说明是自定义的View
+            view = createView(inflater,name,null,attrs);
         }
         return view;
+    }
+
+    private View createView(LayoutInflater inflater,String name,String prefix,AttributeSet attrs){
+        try{
+            return inflater.createView(name,prefix,attrs);
+        } catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 
 }

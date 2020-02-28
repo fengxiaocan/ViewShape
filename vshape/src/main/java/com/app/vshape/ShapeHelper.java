@@ -48,11 +48,13 @@ public final class ShapeHelper{
 
     /**
      * 注册在{@link Activity#attachBaseContext(Context)}方法
+     * 有bug,暂时不开放
      *
      * @param newBase
      * @return
      */
-    public static Context attachBaseContext(final Context newBase){
+    @Deprecated
+    private static Context attachBaseContext(final Context newBase){
         final LayoutInflater inflater = LayoutInflater.from(newBase);
         if(inflater instanceof ViewShapeInflater)
             return newBase;
@@ -140,6 +142,7 @@ public final class ShapeHelper{
 
     /**
      * 起到预览作用
+     *
      * @param view
      * @param attrs
      */
@@ -170,7 +173,6 @@ public final class ShapeHelper{
         }
 
         drawable.setShape(i.getInt(a,R.styleable.ViewShape_shapeType,GradientDrawable.RECTANGLE));
-
         //size
         final int size = i.getDimensionPixelSize(a,R.styleable.ViewShape_shapeSolidSize,- 1);
         drawable.setSize(i.getDimensionPixelSize(a,R.styleable.ViewShape_shapeSolidWidth,size),
