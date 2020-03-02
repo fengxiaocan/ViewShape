@@ -17,7 +17,7 @@
         android:text="Hello World!"
         app:shapeCornerRadius="50dp"
         app:shapeSolidColor="@color/colorPrimaryDark"
-        app:shapeStrokeColor="#ff9211"
+        app:shapeStrokeColor="#FF9211"
         app:shapeStrokeWidth="2dp"
         tools:ignore="MissingPrefix" />
 

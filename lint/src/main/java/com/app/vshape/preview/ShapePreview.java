@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 
 import com.android.layoutlib.bridge.android.BridgeContext;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.ExceptionUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -78,9 +79,7 @@ public final class ShapePreview{
             modifiers.setAccessible(true);
             modifiers.set(field,field.getModifiers() & ~ Modifier.FINAL);
             origin = (HashMap<String,Constructor<?>>)field.get(null);
-            if(origin.getClass()
-                     .getCanonicalName()
-                     .endsWith("MyHashMap"))
+            if(origin.getClass().getCanonicalName().endsWith("MyHashMap"))
                 return;// already hooked
             field.set(null,new MyHashMap<>(origin));
         } catch(Exception ex){
@@ -101,10 +100,7 @@ public final class ShapePreview{
         }
         try{
             Object o = field.get(null);
-            if(o != null && o.getClass()
-                             .getCanonicalName()
-                             .endsWith("MyHashMap"))
-            {
+            if(o != null && o.getClass().getCanonicalName().endsWith("MyHashMap")){
                 sLogger.info("Preview installed successfully");
             } else{
                 sLogger.info("Preview install failed");
@@ -114,6 +110,7 @@ public final class ShapePreview{
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static Unsafe getUnsafe(){
         Unsafe unsafe = null;
         try{

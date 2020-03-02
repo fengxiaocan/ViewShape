@@ -20,6 +20,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.android.ide.common.rendering.api.LayoutlibCallback;
 import com.android.layoutlib.bridge.Bridge;
@@ -38,9 +41,22 @@ import java.util.Set;
 final class ViewFactory implements LayoutInflater.Factory2{
     private static final String[] sClassPrefixList =
             {"android.widget.","android.webkit.","android.app.","android.view."};
-    private static final Set<String> APPCOMPAT_VIEWS = new HashSet<>(
-            Arrays.asList("TextView","ImageView","Button","EditText","Spinner","ImageButton","CheckBox","RadioButton",
-                    "CheckedTextView","AutoCompleteTextView","MultiAutoCompleteTextView","RatingBar","SeekBar"));
+    private static final Set<String> APPCOMPAT_VIEWS = new HashSet<>(Arrays.asList("LinearLayout",
+            "RelativeLayout",
+            "FrameLayout",
+            "TextView",
+            "ImageView",
+            "Button",
+            "EditText",
+            "Spinner",
+            "ImageButton",
+            "CheckBox",
+            "RadioButton",
+            "CheckedTextView",
+            "AutoCompleteTextView",
+            "MultiAutoCompleteTextView",
+            "RatingBar",
+            "SeekBar"));
 
     private static final String sAutoNs = "http://schemas.android.com/apk/res-auto";
     private static boolean sExceptionCaught = false; //only log exception once, don't mess up log file
@@ -72,14 +88,13 @@ final class ViewFactory implements LayoutInflater.Factory2{
     @Override
     public View onCreateView(View parent,String name,Context context,AttributeSet attrs){
         View result = null;
-        if(this.mLoadAppCompatViews && APPCOMPAT_VIEWS.contains(name) && !this.mFailedAppCompatViews.contains(name)){
+        if(this.mLoadAppCompatViews && APPCOMPAT_VIEWS.contains(name) && ! this.mFailedAppCompatViews.contains(name)){
             result = this.loadCustomView((mUseAndroidx ? sAndroidxViewPrefix : sLegacyAppCompatViewPrefix) + name,
                     attrs);
             if(result == null){
                 this.mFailedAppCompatViews.add(name);
             }
         }
-
         if(result == null){
             for(String prefix: sClassPrefixList){
                 try{
@@ -87,9 +102,8 @@ final class ViewFactory implements LayoutInflater.Factory2{
                     if(result != null){
                         break;
                     }
-                } catch(ClassNotFoundException e){
-                    // In this case we want to let the base class take a crack
-                    // at it.
+                } catch(Exception e){
+                    // In this case we want to let the base class take a crack at it.
                 }
             }
         }
@@ -128,6 +142,7 @@ final class ViewFactory implements LayoutInflater.Factory2{
 
     /**
      * 调用预览方法
+     *
      * @param view
      * @param attrs
      */
@@ -142,7 +157,9 @@ final class ViewFactory implements LayoutInflater.Factory2{
                 Throwable ex = ((InvocationTargetException)e).getTargetException();
                 if(ex instanceof NoClassDefFoundError && ex.getMessage().contains("vshape/R$styleable")){
                     Bridge.getLog().warning("build-needed",
-                            "ViewShape not worked due to missing R.class, try assemble project to refresh",null,null);
+                            "ViewShape not worked due to missing R.class, try assemble project to refresh",
+                            null,
+                            null);
                 }
             } else{
                 if(! sExceptionCaught){
@@ -155,6 +172,7 @@ final class ViewFactory implements LayoutInflater.Factory2{
 
     /**
      * 加载View的一些信息
+     *
      * @param name
      * @param attrs
      * @return
@@ -191,4 +209,15 @@ final class ViewFactory implements LayoutInflater.Factory2{
         return onCreateView(null,name,context,attrs);
     }
 
+    protected LinearLayout createLinearLayout(Context context,AttributeSet attrs){
+        return new LinearLayout(context,attrs);
+    }
+
+    protected RelativeLayout createRelativeLayout(Context context,AttributeSet attrs){
+        return new RelativeLayout(context,attrs);
+    }
+
+    protected FrameLayout createFrameLayout(Context context,AttributeSet attrs){
+        return new FrameLayout(context,attrs);
+    }
 }

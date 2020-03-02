@@ -137,7 +137,7 @@ public final class ShapeHelper{
      * @param attrs
      */
     public static void setShape(View view,Context context,AttributeSet attrs){
-        view.setBackground(newshape(context.getResources(),attrs));
+        view.setBackground(newshape(context,attrs));
     }
 
     /**
@@ -147,11 +147,12 @@ public final class ShapeHelper{
      * @param attrs
      */
     static void applyDrawableToView(View view,AttributeSet attrs){
-        view.setBackground(newshape(view.getContext().getResources(),attrs));
+        view.setBackground(newshape(view.getContext(),attrs));
     }
 
     public static GradientDrawable newshape(Context context,AttributeSet attrs){
-        return newshape(context.getResources(),attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ViewShape);
+        return newShape(a);
     }
 
     /**
@@ -162,9 +163,13 @@ public final class ShapeHelper{
      * @return
      */
     public static GradientDrawable newshape(Resources resources,AttributeSet attrs){
-        GradientDrawable drawable = new GradientDrawable();
         //shape类型
         TypedArray a = resources.obtainAttributes(attrs,R.styleable.ViewShape);
+        return newShape(a);
+    }
+
+    public static GradientDrawable newShape(TypedArray a){
+        GradientDrawable drawable = new GradientDrawable();
         final OnViewShapeInterceptor i;
         if(onViewShapeInterceptor != null){
             i = onViewShapeInterceptor;

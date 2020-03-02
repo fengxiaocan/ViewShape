@@ -45,4 +45,8 @@ public class OnViewShapeInterceptorTemp implements OnViewShapeInterceptor{
     public float getFloat(TypedArray array,@StyleableRes int index,float defValue){
         return array.getFloat(index,defValue);
     }
+
+    public int getResourceId(TypedArray array,@StyleableRes int index){
+        return array.getResourceId(index,0);
+    }
 }

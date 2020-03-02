@@ -12,11 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public class ShapeFactory implements LayoutInflater.Factory2{
-    private static final String[] sClassPrefixList = {"android.widget.","android.webkit.","android.app."};
-
     private final AppCompatDelegate appCompatDelegate;
     private LayoutInflater.Factory factory;
     private LayoutInflater.Factory2 factory2;
+    private AppCompatViewInflater compatViewInflater;
 
     public ShapeFactory setFactory2(LayoutInflater.Factory2 factory2){
         if(factory2 != null){
@@ -65,44 +64,15 @@ public class ShapeFactory implements LayoutInflater.Factory2{
             view = appCompatDelegate.createView(parent,name,context,attrs);
         }
         if(view == null){
-            view = createView(name,context,attrs);
+            if(compatViewInflater == null){
+                compatViewInflater = new AppCompatViewInflater();
+            }
+            view = compatViewInflater.createView(parent,name,context,attrs);
         }
-
         if(ShapeHelper.onCreateShape(view,attrs)){
             ShapeHelper.applyDrawableToView(view,attrs);
         }
         return view;
     }
-
-    private View createView(String name,Context context,AttributeSet attrs){
-        View view = null;
-        LayoutInflater inflater = LayoutInflater.from(context);
-        if(- 1 == name.indexOf('.')){    //不带".",说明是系统的View
-            if("View".equals(name)){
-                view = createView(inflater,name,"android.view.",attrs);
-            }
-            if(view == null){
-                for(String prefix: sClassPrefixList){
-                    view = createView(inflater,name,prefix,attrs);
-                    if(view != null){
-                        return view;
-                    }
-                }
-            }
-        } else{    //带".",说明是自定义的View
-            view = createView(inflater,name,null,attrs);
-        }
-        return view;
-    }
-
-    private View createView(LayoutInflater inflater,String name,String prefix,AttributeSet attrs){
-        try{
-            return inflater.createView(name,prefix,attrs);
-        } catch(ClassNotFoundException ex){
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
 }
 
