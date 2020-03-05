@@ -2,7 +2,6 @@ package com.app.vshape;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,35 +44,6 @@ public final class ShapeHelper{
         return new ShapeFactory(activity);
     }
 
-    /**
-     * 注册在{@link Activity#attachBaseContext(Context)}方法
-     * 有bug,暂时不开放
-     *
-     * @param newBase
-     * @return
-     */
-    @Deprecated
-    private static Context attachBaseContext(final Context newBase){
-        final LayoutInflater inflater = LayoutInflater.from(newBase);
-        if(inflater instanceof ViewShapeInflater)
-            return newBase;
-        return new ContextWrapper(newBase){
-            private ViewShapeInflater mInflater;
-
-            @Override
-            public Object getSystemService(String name){
-                if(LAYOUT_INFLATER_SERVICE.equals(name)){
-                    if(mInflater == null){
-                        mInflater = new ViewShapeInflater(newBase,inflater);
-                    }
-                    return mInflater;
-                }
-                return super.getSystemService(name);
-            }
-        };
-    }
-
-
     public static boolean isSupportedAttr(String attributeName){
         switch(attributeName){
             case "shapeType":
@@ -103,6 +72,14 @@ public final class ShapeHelper{
             default:
                 return false;
         }
+    }
+
+    public static boolean disposeViewShape(View view,AttributeSet attrs){
+        if(ShapeHelper.onCreateShape(view,attrs)){
+            ShapeHelper.applyDrawableToView(view,attrs);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -146,7 +123,7 @@ public final class ShapeHelper{
      * @param view
      * @param attrs
      */
-    static void applyDrawableToView(View view,AttributeSet attrs){
+    public static void applyDrawableToView(View view,AttributeSet attrs){
         view.setBackground(newshape(view.getContext(),attrs));
     }
 
@@ -192,7 +169,8 @@ public final class ShapeHelper{
         final int gradientStartColor = i.getColor(a,R.styleable.ViewShape_shapeGradientStartColor,Color.TRANSPARENT);
         final int gradientEndColor = i.getColor(a,R.styleable.ViewShape_shapeGradientEndColor,Color.TRANSPARENT);
         if(a.hasValue(R.styleable.ViewShape_shapeGradientCenterColor)){
-            final int gradientCenterColor = i.getColor(a,R.styleable.ViewShape_shapeGradientCenterColor,
+            final int gradientCenterColor = i.getColor(a,
+                    R.styleable.ViewShape_shapeGradientCenterColor,
                     Color.TRANSPARENT);
             gradientColors = new int[]{gradientStartColor,gradientCenterColor,gradientEndColor};
         } else{

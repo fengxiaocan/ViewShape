@@ -45,9 +45,13 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
     static final Issue ISSUE = Issue.create("ViewShapeInstalledBeforeSuper",
             "ViewShape registerActivity before super.onCreate" + "()",
             "You have installed ShapeHelper before super.onCreate()," +
-            " this will cause AppCompatViews unavailable if you are using AppCompatActivity",Category.CORRECTNESS,7,
-            Severity.WARNING,new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
+            " this will cause AppCompatViews unavailable if you are using AppCompatActivity",
+            Category.CORRECTNESS,
+            7,
+            Severity.WARNING,
+            new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
 
+    private static final String DISPOSE_METHOD = "disposeViewShape";
     private static final String INSTALL_METHOD = "registerActivity";
     private static final String NEW_METHOD = "registerShapeFactory";
     private static final String TYPE_SHAPE = "com.app.vshape.ShapeHelper";
@@ -61,6 +65,7 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
         ArrayList<String> strings = new ArrayList<>();
         strings.add(NEW_METHOD);
         strings.add(INSTALL_METHOD);
+        strings.add(DISPOSE_METHOD);
         return strings;
     }
 
@@ -71,8 +76,8 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
         //check ShapeHelper.registerActivity() call
         //下面的方法都是检测是否在AppCompatActivity onCreate中注册过registerActivity
         String methodName = method.getName();
-        if(! methodName.equals(INSTALL_METHOD) || ! methodName.equals(NEW_METHOD) || ! evaluator.isMemberInClass(method,
-                TYPE_SHAPE))
+        if(! methodName.equals(INSTALL_METHOD) || ! methodName.equals(NEW_METHOD) ||
+           ! methodName.equals(DISPOSE_METHOD) || ! evaluator.isMemberInClass(method,TYPE_SHAPE))
             return;
 
         //check current class is decent of AppCompatActivity
@@ -95,7 +100,9 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
         SuperOnCreateFinder finder = new SuperOnCreateFinder(call);
         uMethod.accept(finder);
         if(! finder.isSuperOnCreateCalled()){
-            context.report(ISSUE,call,context.getLocation(call),
+            context.report(ISSUE,
+                    call,
+                    context.getLocation(call),
                     "calling `ShapeHelper.registerActivity()` before super.onCreate can cause AppCompatViews unavailable");
         }
     }
@@ -126,8 +133,9 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
                     return true;
                 }
             } else{
-                if("onCreate".equals(LintUtils.getMethodName(node)) && node.getReceiver() != null && "super".equals(
-                        node.getReceiver().toString()))
+                if("onCreate".equals(LintUtils.getMethodName(node)) && node.getReceiver() != null && "super".equals(node
+                        .getReceiver()
+                        .toString()))
                 {
                     onCreateFound = true;
                 }

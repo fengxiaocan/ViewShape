@@ -13,23 +13,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 public class ShapeFactory implements LayoutInflater.Factory2{
     private final AppCompatDelegate appCompatDelegate;
-    private LayoutInflater.Factory factory;
-    private LayoutInflater.Factory2 factory2;
     private AppCompatViewInflater compatViewInflater;
 
-    public ShapeFactory setFactory2(LayoutInflater.Factory2 factory2){
-        if(factory2 != null){
-            this.factory2 = factory2;
-        }
-        return this;
-    }
-
-    public ShapeFactory setFactory(LayoutInflater.Factory factory){
-        if(factory != null){
-            this.factory = factory;
-        }
-        return this;
-    }
 
     public ShapeFactory(){
         appCompatDelegate = null;
@@ -56,11 +41,8 @@ public class ShapeFactory implements LayoutInflater.Factory2{
             @NonNull AttributeSet attrs)
     {
         View view = null;
-        if(factory2 != null){
-            view = factory2.onCreateView(parent,name,context,attrs);
-        } else if(factory != null){
-            view = factory.onCreateView(name,context,attrs);
-        } else if(appCompatDelegate != null){
+
+        if(appCompatDelegate != null){
             view = appCompatDelegate.createView(parent,name,context,attrs);
         }
         if(view == null){

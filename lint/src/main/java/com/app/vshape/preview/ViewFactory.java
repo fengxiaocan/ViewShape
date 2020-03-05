@@ -115,27 +115,28 @@ final class ViewFactory implements LayoutInflater.Factory2{
 
         if(result != null){
             //判断View是否有shape设定的属性
-            if(attrs.getAttributeValue(sAutoNs,"shapeType") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeSolidSize") != null || attrs.getAttributeValue(sAutoNs,"shapeSolidWidth") != null ||
-               attrs.getAttributeValue(sAutoNs,"shapeSolidHeight") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeSolidColor") != null || attrs.getAttributeValue(sAutoNs,"shapeStrokeWidth") != null ||
-               attrs.getAttributeValue(sAutoNs,"shapeStrokeColor") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeStokeDashWidth") != null || attrs.getAttributeValue(sAutoNs,"shapeStokeDashGap") != null ||
-               attrs.getAttributeValue(sAutoNs,"shapeCornerRadius") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeCornerTopLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeCornerTopRightRadius") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeCornerBottomLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
-                    "shapeCornerBottomRightRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientType") !=
-                                                               null || attrs.getAttributeValue(sAutoNs,
-                    "shapeGradientAngle") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientStartColor") !=
-                                                     null || attrs.getAttributeValue(sAutoNs,
-                    "shapeGradientCenterColor") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientEndColor") !=
-                                                           null || attrs.getAttributeValue(sAutoNs,
-                    "shapeGradientRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientCenterX") != null ||
-               attrs.getAttributeValue(sAutoNs,"shapeGradientCenterY") != null)
-            {
-                applyDrawableToView(result,attrs);
-            }
+//            if(attrs.getAttributeValue(sAutoNs,"shapeType") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeSolidSize") != null || attrs.getAttributeValue(sAutoNs,"shapeSolidWidth") != null ||
+//               attrs.getAttributeValue(sAutoNs,"shapeSolidHeight") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeSolidColor") != null || attrs.getAttributeValue(sAutoNs,"shapeStrokeWidth") != null ||
+//               attrs.getAttributeValue(sAutoNs,"shapeStrokeColor") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeStokeDashWidth") != null || attrs.getAttributeValue(sAutoNs,"shapeStokeDashGap") != null ||
+//               attrs.getAttributeValue(sAutoNs,"shapeCornerRadius") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeCornerTopLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeCornerTopRightRadius") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeCornerBottomLeftRadius") != null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeCornerBottomRightRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientType") !=
+//                                                               null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeGradientAngle") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientStartColor") !=
+//                                                     null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeGradientCenterColor") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientEndColor") !=
+//                                                           null || attrs.getAttributeValue(sAutoNs,
+//                    "shapeGradientRadius") != null || attrs.getAttributeValue(sAutoNs,"shapeGradientCenterX") != null ||
+//               attrs.getAttributeValue(sAutoNs,"shapeGradientCenterY") != null)
+//            {
+//                applyDrawableToView(result,attrs);
+//            }
+
         }
         return result;
     }
