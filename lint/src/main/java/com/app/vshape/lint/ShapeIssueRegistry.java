@@ -31,6 +31,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class ShapeIssueRegistry extends IssueRegistry{
 
+
     static{
         installStudioPlugins();
     }
@@ -39,9 +40,9 @@ public final class ShapeIssueRegistry extends IssueRegistry{
         boolean lintInsideStudio;
         try{
             Class.forName("org.jetbrains.android.dom.AndroidDomElement");
-            lintInsideStudio = true;
+            lintInsideStudio=true;
         } catch(ClassNotFoundException e){
-            lintInsideStudio = false;
+            lintInsideStudio=false;
         }
         if(lintInsideStudio){
             try{

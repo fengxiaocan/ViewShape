@@ -36,11 +36,11 @@ import javax.annotation.Nonnull;
 
 @SuppressWarnings("unchecked")
 public final class ShapeDomExtender extends DomExtender<AndroidDomElement>{
-    private static HashMap<Object,Class> sValueClasses = new HashMap<>();
+    private static HashMap<Object,Class> sValueClasses=new HashMap<>();
 
     static{
         try{
-            Class legacyAttributeFormatClass = Class.forName("org.jetbrains.android.dom.attrs.AttributeFormat");
+            Class legacyAttributeFormatClass=Class.forName("org.jetbrains.android.dom.attrs.AttributeFormat");
             sValueClasses.put(Enum.valueOf(legacyAttributeFormatClass,"Boolean"),boolean.class);
             sValueClasses.put(Enum.valueOf(legacyAttributeFormatClass,"Reference"),ResourceValue.class);
             sValueClasses.put(Enum.valueOf(legacyAttributeFormatClass,"Dimension"),ResourceValue.class);
@@ -63,22 +63,21 @@ public final class ShapeDomExtender extends DomExtender<AndroidDomElement>{
     }
 
     private static Class getValueClass(Object format){
-        Class cls = sValueClasses.get(format);
-        return cls == null ? String.class : cls;
+        Class cls=sValueClasses.get(format);
+        return cls==null ? String.class : cls;
     }
 
     @Override
     public void registerExtensions(@Nonnull AndroidDomElement element,@Nonnull final DomExtensionsRegistrar registrar){
-        final AndroidFacet facet = AndroidFacet.getInstance(element);
+        final AndroidFacet facet=AndroidFacet.getInstance(element);
 
-        if(facet == null){
+        if(facet==null){
             return;
         }
 
-        AttributeProcessingUtil.AttributeProcessor callback = (xmlName,attrDef,parentStyleableName) -> {
-            Set<?> formats = attrDef.getFormats();
-            Class valueClass = formats.size() == 1 ? getValueClass(formats.iterator()
-                                                                          .next()) : String.class;
+        AttributeProcessingUtil.AttributeProcessor callback=(xmlName,attrDef,parentStyleableName)->{
+            Set<?> formats=attrDef.getFormats();
+            Class valueClass=formats.size()==1 ? getValueClass(formats.iterator().next()) : String.class;
             registrar.registerAttributeChildExtension(xmlName,GenericAttributeValue.class);
             return registrar.registerGenericAttributeValueChildExtension(xmlName,valueClass);
         };
@@ -91,27 +90,25 @@ public final class ShapeDomExtender extends DomExtender<AndroidDomElement>{
 
 
     public static void install(){
-        ExtensionPoint<DomExtenderEP> point = Extensions.getRootArea()
-                                                        .getExtensionPoint(DomExtenderEP.EP_NAME);
-        String clazzName = ShapeDomExtender.class.getCanonicalName();
-        DomExtenderEP androidDomExtenderEp = null;
-        DomExtenderEP[] eps = point.getExtensions();
+        ExtensionPoint<DomExtenderEP> point=Extensions.getRootArea().getExtensionPoint(DomExtenderEP.EP_NAME);
+        String clazzName=ShapeDomExtender.class.getCanonicalName();
+        DomExtenderEP androidDomExtenderEp=null;
+        DomExtenderEP[] eps=point.getExtensions();
         for(DomExtenderEP ep: eps){
             if(clazzName.equals(ep.extenderClassName)){
                 return;// already registered
             }
             if(ep.extenderClassName.endsWith("AndroidDomExtender")){
-                androidDomExtenderEp = ep;
+                androidDomExtenderEp=ep;
             }
         }
-        if(androidDomExtenderEp != null){
-            DomExtenderEP ep = new DomExtenderEP();
+        if(androidDomExtenderEp!=null){
+            DomExtenderEP ep=new DomExtenderEP();
             ep.setPluginDescriptor(androidDomExtenderEp.getPluginDescriptor());
-            ep.domClassName = AndroidDomElement.class.getCanonicalName();
-            ep.extenderClassName = ShapeDomExtender.class.getCanonicalName();
+            ep.domClassName=AndroidDomElement.class.getCanonicalName();
+            ep.extenderClassName=ShapeDomExtender.class.getCanonicalName();
             try{
-                Field field = ep.getClass()
-                                .getDeclaredField("myExtender");
+                Field field=ep.getClass().getDeclaredField("myExtender");
                 field.setAccessible(true);
                 field.set(ep,new ShapeDomExtender());
                 point.registerExtension(ep);

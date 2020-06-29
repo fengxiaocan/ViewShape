@@ -7,7 +7,9 @@
     android:layout_margin="20dp"
     android:orientation="vertical"
     app:shapeCornerRadius="20dp"
-    app:shapeSolidColor="@color/colorAccent">
+    app:shapeSolidColor="@color/colorAccent"
+    app:shapeStrokeColor="@color/colorPrimaryDark"
+    app:shapeStrokeWidth="2dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,4 +23,9 @@
         app:shapeStrokeWidth="2dp"
         tools:ignore="MissingPrefix" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_launcher" />
 </RelativeLayout>

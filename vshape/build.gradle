@@ -21,27 +21,33 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_7
+//        targetCompatibility JavaVersion.VERSION_1_7
+//    }
 }
 configurations {
     lintChecks
 }
 
 dependencies {
-    lintChecks project(path: ':lint', configuration: 'lintChecks')
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    lintChecks project(path: ':lint', configuration: 'lintChecks')
+    lintChecks project(':lint')
+    lintPublish project(':lint')
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
 }
 
-task copyLintJar(type: Copy) {
-    from(configurations.lintChecks) {
-        rename { 'shape-lint' }
-    }
-    into 'build/intermediates/lint/'
-}
+//task copyLintJar(type: Copy) {
+//    from(configurations.lintChecks) {
+//        rename { 'shape-lint' }
+//    }
+//
+//    into 'build/intermediates/lint/'
+//}
 
-project.afterEvaluate {
-    def compileLintTask = project.tasks.find { it.name == 'compileLint' }
-    compileLintTask.dependsOn(copyLintJar)
-}
+//project.afterEvaluate {
+//    def compileLintTask = project.tasks.find { it.name == 'compileLint' }
+//    compileLintTask.dependsOn(copyLintJar)
+//}
 

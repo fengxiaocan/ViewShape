@@ -40,29 +40,31 @@ import java.util.List;
 
 /**
  * 在activity中检测是否有调用 registerShapeFactory 或者registerActivity
+ * Detector 是自定义规则的核心，它的作用是扫描代码，从而获取代码中的各种信息，然后基于这些信息进行提醒和报告
  */
 public final class InstalledBeforeSuperDetector extends Detector implements SourceCodeScanner, Detector.UastScanner{
-    static final Issue ISSUE = Issue.create("ViewShapeInstalledBeforeSuper",
-            "ViewShape registerActivity before super.onCreate" + "()",
-            "You have installed ShapeHelper before super.onCreate()," +
-            " this will cause AppCompatViews unavailable if you are using AppCompatActivity",
-            Category.CORRECTNESS,
-            7,
-            Severity.WARNING,
-            new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
+    static final Issue ISSUE=Issue.create("ViewShapeInstalledBeforeSuper",
+                                          "ViewShape registerActivity before super.onCreate"+"()",
+                                          "You have installed ShapeHelper before super.onCreate(),"+
+                                          " this will cause AppCompatViews unavailable if you are using AppCompatActivity",
+                                          Category.CORRECTNESS,
+                                          7,
+                                          Severity.WARNING,
+                                          new Implementation(InstalledBeforeSuperDetector.class,Scope.JAVA_FILE_SCOPE));
 
-    private static final String DISPOSE_METHOD = "disposeViewShape";
-    private static final String INSTALL_METHOD = "registerActivity";
-    private static final String NEW_METHOD = "registerShapeFactory";
-    private static final String TYPE_SHAPE = "com.app.vshape.ShapeHelper";
-    private static final String LEGACY_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
-    private static final String COMPAT_ACTIVITY = "androidx.appcompat.app.AppCompatActivity";
+    private static final String DISPOSE_METHOD="disposeViewShape";
+    private static final String INSTALL_METHOD="registerActivity";
+    private static final String NEW_METHOD="registerShapeFactory";
+
+    private static final String TYPE_SHAPE="com.app.vshape.ShapeHelper";
+    private static final String LEGACY_COMPAT_ACTIVITY="android.support.v7.app.AppCompatActivity";
+    private static final String COMPAT_ACTIVITY="androidx.appcompat.app.AppCompatActivity";
 
     @Nullable
     @Override
     public List<String> getApplicableMethodNames(){
         //获取支持的方法集合
-        ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> strings=new ArrayList<>();
         strings.add(NEW_METHOD);
         strings.add(INSTALL_METHOD);
         strings.add(DISPOSE_METHOD);
@@ -71,39 +73,40 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
 
     @Override
     public void visitMethod(JavaContext context,UCallExpression call,PsiMethod method){
-        JavaEvaluator evaluator = context.getEvaluator();
+
+        JavaEvaluator evaluator=context.getEvaluator();
 
         //check ShapeHelper.registerActivity() call
         //下面的方法都是检测是否在AppCompatActivity onCreate中注册过registerActivity
-        String methodName = method.getName();
-        if(! methodName.equals(INSTALL_METHOD) || ! methodName.equals(NEW_METHOD) ||
-           ! methodName.equals(DISPOSE_METHOD) || ! evaluator.isMemberInClass(method,TYPE_SHAPE))
+        String methodName=method.getName();
+        if(!methodName.equals(INSTALL_METHOD)||!methodName.equals(NEW_METHOD)||!methodName.equals(DISPOSE_METHOD)||
+           !evaluator.isMemberInClass(method,TYPE_SHAPE))
             return;
 
         //check current class is decent of AppCompatActivity
-        PsiClass legacyCompatActClass = evaluator.findClass(LEGACY_COMPAT_ACTIVITY);
-        PsiClass compatActClass = evaluator.findClass(COMPAT_ACTIVITY);
-        PsiClass c = UastUtils.getContainingClass(call);
-        boolean isAppCompatActivity = false;
-        if(c != null){
-            isAppCompatActivity = (legacyCompatActClass != null && c.isInheritor(legacyCompatActClass,
-                    true/*deep check*/)) || compatActClass != null && c.isInheritor(compatActClass,true/*deep check*/);
+        PsiClass legacyCompatActClass=evaluator.findClass(LEGACY_COMPAT_ACTIVITY);
+        PsiClass compatActClass=evaluator.findClass(COMPAT_ACTIVITY);
+        PsiClass c=UastUtils.getContainingClass(call);
+        boolean isAppCompatActivity=false;
+        if(c!=null){
+            isAppCompatActivity=(legacyCompatActClass!=null&&c.isInheritor(legacyCompatActClass,true/*deep check*/))||
+                                compatActClass!=null&&c.isInheritor(compatActClass,true/*deep check*/);
         }
-        if(! isAppCompatActivity)
+        if(!isAppCompatActivity)
             return;
 
         //check current method is onCreate
-        @SuppressWarnings("unchecked") UMethod uMethod = UastUtils.getParentOfType(call,true,UMethod.class);
-        if(uMethod == null || ! "onCreate".equals(uMethod.getName()))
+        @SuppressWarnings("unchecked") UMethod uMethod=UastUtils.getParentOfType(call,true,UMethod.class);
+        if(uMethod==null||!"onCreate".equals(uMethod.getName()))
             return;
 
-        SuperOnCreateFinder finder = new SuperOnCreateFinder(call);
+        SuperOnCreateFinder finder=new SuperOnCreateFinder(call);
         uMethod.accept(finder);
-        if(! finder.isSuperOnCreateCalled()){
+        if(!finder.isSuperOnCreateCalled()){
             context.report(ISSUE,
-                    call,
-                    context.getLocation(call),
-                    "calling `ShapeHelper.registerActivity()` before super.onCreate can cause AppCompatViews unavailable");
+                           call,
+                           context.getLocation(call),
+                           "calling `ShapeHelper.installViewFactory()` before super.onCreate can cause AppCompatViews unavailable");
         }
     }
 
@@ -122,22 +125,21 @@ public final class InstalledBeforeSuperDetector extends Detector implements Sour
         private boolean onCreateFound;
 
         private SuperOnCreateFinder(UCallExpression target){
-            this.target = target;
+            this.target=target;
         }
 
         @Override
         public boolean visitCallExpression(UCallExpression node){
-            if(node == target || node.getPsi() != null && node.getPsi() == target.getPsi()){
+            if(node==target||node.getPsi()!=null&&node.getPsi()==target.getPsi()){
                 if(onCreateFound){
-                    ok = true;
+                    ok=true;
                     return true;
                 }
             } else{
-                if("onCreate".equals(LintUtils.getMethodName(node)) && node.getReceiver() != null && "super".equals(node
-                        .getReceiver()
-                        .toString()))
+                if("onCreate".equals(LintUtils.getMethodName(node))&&node.getReceiver()!=null&&
+                   "super".equals(node.getReceiver().toString()))
                 {
-                    onCreateFound = true;
+                    onCreateFound=true;
                 }
             }
             return super.visitCallExpression(node);
